@@ -41,63 +41,15 @@
   <div class="body-container">
     <div class="cart-body-container"> 
       
-      <div class="cart-left-section">
-        <div class="shopping-title">Shopping</div>
-        
-          <div class="item-section">
-            <div class="item-left-section">
-              <a class = "cart-item-image">
-                <img class = "cart-item-image" src="image/bag-image/bag-1.jpg">
-              </a>
-              <a class="cart-item-name">
-                Gray Bag
-              </a>
-            </div>
-            <div class="action-button-section">
-              <div class="cart-item-price">
-                $140.00
-              </div>
-              <button class="update-button">
-                Update
-              </button>
-              <div class="update-container">
-                <span class="quantity-text">Quantity</span>
-                <button class="decrease-button">-</button>
-                <input type="text" class="quantity-input-field">
-                <button class="increase-button">+</button>
-              </div>
-              <button  class="delete-button">
-                Delete
-              </button>
-            </div>
-          </div>
-          <div class="item-section">
-            <div class="item-left-section">
-              <a class = "cart-item-image">
-                <img class = "cart-item-image" src="image/bag-image/bag-1.jpg">
-              </a>
-              <a class="cart-item-name">
-                Gray Bag
-              </a>
-            </div>
-            <div class="action-button-section">
-              <div class="cart-item-price">
-                $140.00
-              </div>
-              <button class="update-button">
-                Update
-              </button>
-              <div class="update-container">
-                <span class="quantity-text">Quantity</span>
-                <button class="decrease-button">-</button>
-                <input type="text" class="quantity-input-field">
-                <button class="increase-button">+</button>
-              </div>
-              <button  class="delete-button">
-                Delete
-              </button>
-            </div>
-          </div>
+      <div class="cart-left-section js-cart-left-section">
+        <div class="shopping-title">
+          Shopping:
+          <span class="estimate-shipping"> Estimate Shipping (Thrusday,Oct 10, 2024)
+          </span>
+        </div>
+
+        <div class="item-section js-item-section">
+        </div>
         
         <div class="shipping-section">
           <div class="shipping-label">Select Your Shipping</div>
@@ -135,4 +87,5 @@
       </div>
     </div>
   </div>
+ <script type = "module" src="script/checkout.js"></script>
 </body>

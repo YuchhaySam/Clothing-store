@@ -1,6 +1,14 @@
 import { product } from "./product.js";
 
-export const cart = [];
+export const cart = [{
+    id: 'd293c',
+    quantity: 1
+  },
+  {
+    id: 'd293d',
+    quantity: 3
+  }
+];
 
 export function addToCart(productId){
   
