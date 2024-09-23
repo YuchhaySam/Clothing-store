@@ -2,6 +2,7 @@
 .title-container{
   display: flex;
   justify-content: center;
+  height:100px;
 }
 
 
@@ -10,9 +11,8 @@
   text-align: center;
   font-weight: 700;
   font-size: 100px;
-  animation: slideIn 1s ease-out forwards; /*animtion*/
+  animation: slideIn 0.8s ease-out forwards; /*animtion*/
   top: -100vw;
-  
 }
 
 /*animtion*/
@@ -29,7 +29,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 100px auto auto auto;
-  row-gap: 60px;
+  row-gap: 30px;
   max-width: 1100px;
   position: relative;
 }
@@ -38,16 +38,19 @@
  position: relative;
  margin-left: 10px;
  overflow: hidden; /*this hide any overflowing elements*/
- margin-top: 100px;
 }
 .item-image{
   width: 500px;
+  height: 500px;
+  object-fit: cover;
+  object-position: center 20%;
 }
 .item-name{
   position: absolute;
   top: 20px;
   left: 20px;
   font-size: 20px;
+  font-weight: 700;
 }
 
 .item-price{

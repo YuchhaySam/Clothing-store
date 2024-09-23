@@ -6,15 +6,17 @@
 
 
 .cart-body-container{
-  margin-top: 150px;
   display:grid;
   grid-template-columns: 1fr 450px;
+  width: 80%;
+  margin: 150px auto auto auto;
 }
 
 .cart-left-section{
   display:grid;
   grid-template-columns: 1fr;
   margin-left: 70px;
+  max-width: 1000px;
 }
 
 .item-section{
