@@ -1,0 +1,16 @@
+
+.footer-container{
+  background-color: black;
+  height: 500px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin-top: 80px;
+}
+
+.logo-container{
+  margin-left: 18px;
+}
+
+.logo-footer{
+  width: 200px;
+}

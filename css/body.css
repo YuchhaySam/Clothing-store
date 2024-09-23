@@ -1,0 +1,81 @@
+
+.title-container{
+  display: flex;
+  justify-content: center;
+}
+
+
+.title{
+  position: absolute;
+  text-align: center;
+  font-weight: 700;
+  font-size: 100px;
+  animation: slideIn 1s ease-out forwards; /*animtion*/
+  top: -100vw;
+  
+}
+
+/*animtion*/
+@keyframes slideIn {
+  from{
+    top: -100vw;
+  } 
+  to{
+    top: 100px;
+  }
+  
+}
+.item-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 100px auto auto auto;
+  row-gap: 60px;
+  max-width: 1100px;
+  position: relative;
+}
+
+.item{
+ position: relative;
+ margin-left: 10px;
+ overflow: hidden; /*this hide any overflowing elements*/
+ margin-top: 100px;
+}
+.item-image{
+  width: 500px;
+}
+.item-name{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+}
+
+.item-price{
+  position: absolute;
+  left: 20px;
+  top: 50px;
+  color: rgb(156, 154, 154);
+}
+
+.add-to-cart-button{
+  position: absolute;
+  bottom: 30px;
+  left: -30vw;
+  background-color: transparent;
+  font-size: 17px;
+  border:none;
+  font-family: "Montserrat";
+  color: rgb(156, 154, 154);
+  font-weight: 700;
+  transition: left 0.5s ease-out;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.item:hover .add-to-cart-button{
+ left:20px;
+ opacity: 1;
+}
+
+
+
