@@ -3,6 +3,7 @@ import { moneyConvert } from "./ultil/moneyConversion.js";
 import {cart, addToCart} from "../data/cart.js";
 
 let itemHtml = '';
+displayCartPrice();
 
 product.forEach((productItem) => {
   itemHtml += `
