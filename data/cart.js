@@ -1,15 +1,13 @@
 import { product } from "./product.js";
 
-export let cart = JSON.parse(localStorage.getItem('cart')) || [{
-    id: 'd293c',
+export let cart = JSON.parse(localStorage.getItem('cart'));
+if(!cart){
+  cart = [{
+    id: 'd293a',
     quantity: 1
-  },
-  {
-    id: 'd293d',
-    quantity: 3
   }
 ];
-
+}
 export function addToCart(productId){
   
   let checkCart;
@@ -46,4 +44,33 @@ export function deleteItem(productId){
 
 export function saveToLocalStorage(){
   localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+export function increaseQuantity(productId){
+  let newQuantity = 0;
+  cart.forEach((cartItem)=>{
+    if(productId === cartItem.id){
+      if(cartItem.quantity>= 10){
+        alert('Your item cannot be higher than 10');
+      }else{
+        newQuantity = cartItem.quantity += 1;
+      }
+    }
+  })
+  cart.quantity = newQuantity;
+  saveToLocalStorage();
+}
+export function decreaseQuantity(productId){
+  let newQuantity = 0;
+  cart.forEach((cartItem)=>{
+    if(productId === cartItem.id){
+      if(cartItem.quantity<= 1){
+        alert('Your item cannot be lower than 1');
+      }else{
+        newQuantity = cartItem.quantity -= 1;
+      }
+    }
+  })
+  cart.quantity = newQuantity;
+  saveToLocalStorage();
 }

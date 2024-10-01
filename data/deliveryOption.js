@@ -2,13 +2,13 @@ export const deliveryOption = [
   {
     id: '1a',
     name: 'deliveryOption1',
-    priceCents: 1099,
+    priceCents: 1000,
     length: 7
   },
   {
     id: '2a',
     name: 'deliveryOption2',
-    priceCents: 799,
+    priceCents: 700,
     length: 10
   },
   {

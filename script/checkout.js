@@ -1,4 +1,4 @@
-import { cart, deleteItem, saveToLocalStorage } from "../data/cart.js";
+import { cart, deleteItem, saveToLocalStorage, increaseQuantity, decreaseQuantity } from "../data/cart.js";
 import { product } from "../data/product.js";
 import { moneyConvert } from "./ultil/moneyConversion.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
@@ -6,6 +6,11 @@ import {deliveryOption} from "../data/deliveryOption.js";
 
 
 let checkoutItemHtml = '';
+let deliveryOptionHtml = '';
+let deliveryChecked;
+renderPaymentSection();
+deliverOption();
+displayShippingOptionDate();
 cart.forEach((cartItem)=>{
   let checkCart;
   product.forEach((productItem)=>{
@@ -33,40 +38,14 @@ cart.forEach((cartItem)=>{
           <span class="quantity-input-field js-quantity-display-${checkCart.id}"></span>
           <button class="increase-button js-increase-button-${checkCart.id}">+</button>
         </div>
-        <button  class="delete-button js-delete-button" data-product-id = ${checkCart.id}>
+        <button class="delete-button js-delete-button" data-product-id = ${checkCart.id}>
           Delete
         </button>
       </div>
     </div>
-    <div class="shipping-section">
-      <div class="shipping-label">Select Your Shipping</div>
-      <div class="shipping-option-container js-shipping-option-container">
-        ${deliveryHTML()}
-      </div>
-      
-    </div>
+
    `;
 });
-
-function deliveryHTML(){
-  let deliveryOptionHtml = '';
-  deliveryOption.forEach((option)=>{
-    const deliveryOptionChecked = option.priceCents > 0;
-    deliveryOptionHtml += `
-        <label class="shipping-label-radio" for="shipping-option">
-          <input checked type="radio" class="shipping-option-radio js-shipping-option" id="shipping-option" name="shipping" value = ${option.name} data-delivery-id = ${option.id}>
-          ${option.length} Days ($${deliveryOptionChecked ? moneyConvert(option.priceCents): 'Free'})
-        </label>
-    `;
-  });
-  return deliveryOptionHtml;
-}
-
-
-
-
-  
-
 
 document.querySelector('.js-item-section').innerHTML = checkoutItemHtml;
 
@@ -75,59 +54,151 @@ document.querySelectorAll(`.js-delete-button`).forEach((deleteButton)=>{
     const productId = deleteButton.dataset.productId;
     deleteItem(productId);
     updateHtml(productId);
+    displayShippingOptionDate();
   });
 });
-
-
-
 
 document.querySelectorAll('.js-update-container').forEach((container)=>{
   const productId = container.dataset.productId;
   quantityInnerHtml(productId);
   priceInnerHtml(productId);
   
-
-document.querySelectorAll(`.js-decrease-button-${productId}`).forEach((decrease)=>{
-    decrease.addEventListener('click', ()=>{
-      decreaseQuantity(productId);
-      quantityInnerHtml(productId);
-      priceInnerHtml(productId);
+  document.querySelectorAll(`.js-decrease-button-${productId}`).forEach((decrease)=>{
+      decrease.addEventListener('click', ()=>{
+        decreaseQuantity(productId);
+        quantityInnerHtml(productId);
+        priceInnerHtml(productId);
+        renderPaymentSection();
+        displayShippingOptionDate();
+      })
     })
-  })
 
-  document.querySelectorAll(`.js-increase-button-${productId}`).forEach((increase)=>{
-    increase.addEventListener('click', ()=>{
-      increaseQuantity(productId);
-      quantityInnerHtml(productId);
-      priceInnerHtml(productId);
+    document.querySelectorAll(`.js-increase-button-${productId}`).forEach((increase)=>{
+      increase.addEventListener('click', ()=>{
+        increaseQuantity(productId);
+        quantityInnerHtml(productId);
+        priceInnerHtml(productId);
+        renderPaymentSection();
+        displayShippingOptionDate();
+      })
     })
-  })
 });
 
-function renderUpdatedDate(){
-  document.querySelector('.js-estimate-shipping').innerHTML = deliveryDate;
+function deliverOption(){
+  deliveryOption.forEach((option)=>{
+    const deliveryOptionChecked = option.priceCents > 0;
+    deliveryOptionHtml += `
+      <label class="shipping-label-radio" >
+        <input checked type="radio" class="shipping-option-radio js-shipping-option" name="shipping" data-delivery-id = ${option.id}>
+        ${option.length} Days ($${deliveryOptionChecked ? moneyConvert(option.priceCents): 'Free'})
+      </label>
+    `;
+    });
+    document.querySelector('.js-shipping-option-html').innerHTML = deliveryOptionHtml;
 }
-function renderEstimateDate(){
-  const renderDate = document.querySelectorAll('.js-shipping-option');
- 
-  renderDate.forEach((shipping)=>{
+
+function renderPaymentSection(){
+  let cartTotalHtml = `
+  <div class="cart-price-container">
+    <div class="cart-name">Cart Totals</div>
+    <div class="sub-total">
+      <div>Subtotal</div>
+      <div class="js-sub-total"></div>
+    </div>
+    <div class="tax">
+      <div>Delivery</div>
+      <div class="js-delivery-price"></div>
+    </div>
+    <div class="ruler"></div>
+    <div class="grand-total">
+      <div>Total</div>
+      <div class="js-total-payment"></div>
+    </div>
+    <div class="button-checkout">
+      <button class="checkout-button">PROCEED TO CHECKOUT</button>
+    </div>
+  </div>
+  `
+  document.querySelector('.js-cart-right-section').innerHTML = cartTotalHtml;
+}
+
+function addTotalPrice(){
+  let addTotal = 0;
+  cart.forEach((cartItem)=>{
+    let checkCart;
+    product.forEach((productItem)=>{
+      if(cartItem.id === productItem.id){
+        checkCart = productItem;
+      }
+    })
+    if(checkCart){
+      addTotal += checkCart.priceCents * cartItem.quantity;
+    }
+  })
+  document.querySelector('.js-sub-total').innerHTML = `$${moneyConvert(addTotal)}`;
+  return addTotal;
+}
+
+
+function displayShippingOptionDate(){
+  function initializeSelectedShippingOption() {
+    document.querySelectorAll('.js-shipping-option').forEach((shipping) => {
+      if (shipping.checked) { // Assuming the shipping options are radio buttons or checkboxes
+        const deliveryId = shipping.dataset.deliveryId;
+        deliveryOption.forEach((option) => {
+          if (option.id === deliveryId) {
+            deliveryChecked = option;
+          }
+        });
+      }
+    });
+  
+    if (deliveryChecked) {
+      displayDeliveryDate(deliveryChecked);
+      displayDeliveryPrice(deliveryChecked);
+      displaySumPayment(deliveryChecked);
+    }
+  }
+  
+  document.querySelectorAll('.js-shipping-option').forEach((shipping)=>{
     shipping.addEventListener('click', ()=>{
       const deliveryId = shipping.dataset.deliveryId;
-      let deliveryChecked;
-      let deliveryDate;
       deliveryOption.forEach((option)=>{
+        
         if(option.id === deliveryId){
           deliveryChecked = option;
         }
       })
-      if(deliveryChecked){
-        const today = dayjs();
-        const addedDay = today.add(deliveryChecked.length, 'days');
-        deliveryDate =  addedDay.format('dddd, MMM DD, YYYY');
-      }
-      return deliveryDate;
+      displayDeliveryDate(deliveryChecked);
+      displayDeliveryPrice(deliveryChecked);
+      displaySumPayment(deliveryChecked);
     })
   });
+  
+  function displayDeliveryDate(deliveryChecked){
+    let deliveryDate;
+    if(deliveryChecked){
+      const today = dayjs();
+      const addedDay = today.add(deliveryChecked.length, 'days');
+      deliveryDate =  addedDay.format('dddd, MMM DD, YYYY');
+    }
+    document.querySelector('.js-estimate-shipping').innerHTML = `Estimate Shipping: ${deliveryDate}`;
+  }
+  function displayDeliveryPrice(deliveryChecked) {
+    let deliveryPrice = 0;
+    if (deliveryChecked) {
+      deliveryPrice = deliveryChecked.priceCents > 0 ? `$${moneyConvert(deliveryChecked.priceCents)}` : 'Free';
+    }
+    document.querySelector('.js-delivery-price').innerHTML = `${deliveryPrice}`;
+  }
+  function displaySumPayment(deliveryChecked){
+    let deliveryPrice = deliveryChecked.priceCents;
+    let subTotal = addTotalPrice();
+    let total = subTotal + deliveryPrice;
+    document.querySelector('.js-total-payment').innerHTML = `$${moneyConvert(total)}`;
+  }
+  
+  window.addEventListener('load', initializeSelectedShippingOption());
 }
 
 
@@ -137,51 +208,11 @@ function quantityInnerHtml(productId) {
   })
 }
 
-function decreaseQuantity(productId){
-  let newQuantity = 0;
-  cart.forEach((cartItem)=>{
-    if(productId === cartItem.id){
-      if(cartItem.quantity<= 1){
-        alert('Your item cannot be lower than 1');
-      }else{
-        newQuantity = cartItem.quantity -= 1;
-      }
-    }
-  })
-  cart.quantity = newQuantity;
-  saveToLocalStorage();
-}
-
-function increaseQuantity(productId){
-  let newQuantity = 0;
-  cart.forEach((cartItem)=>{
-    if(productId === cartItem.id){
-      if(cartItem.quantity>= 10){
-        alert('Your item cannot be higher than 10');
-      }else{
-        newQuantity = cartItem.quantity += 1;
-      }
-    }
-  })
-  cart.quantity = newQuantity;
-  saveToLocalStorage();
-}
-
 function priceInnerHtml(productId){
   document.querySelectorAll(`.js-cart-item-price-${productId}`).forEach((price)=>{
     price.innerHTML =  `$${moneyConvert(displayPrice(productId))}`;
   })
 } 
-
-function displayQuantity(productId){
-  let productQuantity = 0;
-  cart.forEach((cartItem)=>{
-    if(productId === cartItem.id){
-      productQuantity = cartItem.quantity;
-    }
-  })
-  return productQuantity;
-}
 
 function displayPrice(productId){
   let productPrice = 0;
@@ -195,10 +226,18 @@ function displayPrice(productId){
     if(checkProduct.id === cartItem.id){
       productPrice = checkProduct.priceCents * cartItem.quantity;
     }
-    
   })
   return productPrice; 
-  
+}
+
+function displayQuantity(productId){
+  let productQuantity = 0;
+  cart.forEach((cartItem)=>{
+    if(productId === cartItem.id){
+      productQuantity = cartItem.quantity;
+    }
+  })
+  return productQuantity;
 }
 
 function updateHtml(productId){
